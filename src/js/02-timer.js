@@ -3,6 +3,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
 
 const startBtn = document.querySelector('[data-start]');
+startBtn.disabled = true;
 
 const options = {
   enableTime: true,
@@ -11,9 +12,8 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-    const now = new Date();
-    if (selectedDate <= now) {
-      // window.alert('Please choose a date in the future');
+    const dateNow = new Date();
+    if (selectedDate <= dateNow) {
       Notiflix.Report.failure(
         'Warning!',
         'Please choose a date in the future',
@@ -32,17 +32,19 @@ const options = {
 flatpickr('#datetime-picker', options);
 
 function convertMs(ms) {
+  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
+  // Remaining days
   const days = Math.floor(ms / day);
-
+  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-
+  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-
+  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
@@ -53,7 +55,6 @@ function addLeadingZero(value) {
 }
 
 startBtn.addEventListener('click', () => {
-  startBtn.disabled = true;
   const endDate = new Date(document.getElementById('datetime-picker').value);
   const timerInterval = setInterval(() => {
     const currentTime = new Date();
@@ -71,18 +72,18 @@ startBtn.addEventListener('click', () => {
       );
       return;
     }
-    const timeParts = convertMs(remainingTime);
+    const timeElements = convertMs(remainingTime);
 
     const remainingDays = document.querySelector('[data-days]');
-    remainingDays.textContent = addLeadingZero(timeParts.days);
+    remainingDays.textContent = addLeadingZero(timeElements.days);
 
     const remainingHours = document.querySelector('[data-hours]');
-    remainingHours.textContent = addLeadingZero(timeParts.hours);
+    remainingHours.textContent = addLeadingZero(timeElements.hours);
 
     const remainingMinutes = document.querySelector('[data-minutes]');
-    remainingMinutes.textContent = addLeadingZero(timeParts.minutes);
+    remainingMinutes.textContent = addLeadingZero(timeElements.minutes);
 
     const remainingSeconds = document.querySelector('[data-seconds]');
-    remainingSeconds.textContent = addLeadingZero(timeParts.seconds);
+    remainingSeconds.textContent = addLeadingZero(timeElements.seconds);
   }, 1000);
 });

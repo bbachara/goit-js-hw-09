@@ -4,23 +4,21 @@ function getRandomHexColor() {
     .padStart(6, '0')}`;
 }
 
-let interval;
-
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
+let timerId = null;
 
-startBtn.addEventListener('click', function () {
+startBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   stopBtn.disabled = false;
 
-  interval = setInterval(function () {
+  timerId = setInterval(() => {
     document.body.style.backgroundColor = getRandomHexColor();
   }, 1000);
 });
 
-stopBtn.addEventListener('click', function () {
+stopBtn.addEventListener('click', () => {
+  clearInterval(timerId);
   startBtn.disabled = false;
   stopBtn.disabled = true;
-
-  clearInterval(interval);
 });
