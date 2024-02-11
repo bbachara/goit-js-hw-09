@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const startBtn = document.querySelector('[data-start]');
 
@@ -12,7 +13,16 @@ const options = {
     const selectedDate = selectedDates[0];
     const now = new Date();
     if (selectedDate <= now) {
-      window.alert('Please choose a date in the future');
+      // window.alert('Please choose a date in the future');
+      Notiflix.Report.failure(
+        'Warning!',
+        'Please choose a date in the future',
+        'Close',
+        {
+          width: '360px',
+          svgSize: '120px',
+        }
+      );
       return;
     }
     startBtn.disabled = false;
@@ -50,6 +60,15 @@ startBtn.addEventListener('click', () => {
     const remainingTime = endDate - currentTime;
     if (remainingTime <= 0) {
       clearInterval(timerInterval);
+      Notiflix.Report.success(
+        'Countdown finished!',
+        'The time is now!',
+        'Close',
+        {
+          width: '360px',
+          svgSize: '120px',
+        }
+      );
       return;
     }
     const timeParts = convertMs(remainingTime);
